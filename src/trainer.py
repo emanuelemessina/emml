@@ -31,7 +31,7 @@ class Trainer:
             self.avg_loss_min = checkpoint["avg_loss"]
             self.last_epoch = checkpoint["epoch"]
             # future proof for loading a generic model
-            info = checkpoint["info"]
+            self.checkpoint["info"] = checkpoint["info"]
 
             print(f"Last epoch: {self.last_epoch}")
             print(f"Avg loss min: {self.avg_loss_min}")
@@ -138,7 +138,7 @@ class Trainer:
                     "model_state_dict": self.model.state_dict(),
                     "avg_loss": avg_loss,
                     "epoch": epoch,
-                    "info": self.info,
+                    "info": self.checkpoint["info"],
                 },
                 self.checkpoint_path,
             )
