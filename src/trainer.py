@@ -150,5 +150,5 @@ class Trainer:
 
     def train_loop(self, train_loader, val_loader, plot=False):
         for epoch in range(self.last_epoch, self.num_epochs + 1):
-            self.train(train_loader, epoch, plot)
+            self.train_epoch(train_loader, epoch, plot)
             avg_loss_min = self.val(val_loader, epoch, avg_loss_min)
