@@ -67,7 +67,7 @@ class Trainer:
                 sample_idx = batch_idx * len(data)
                 num_samples = len(train_loader.dataset)
                 num_batches = len(train_loader)
-                progress = 100.0 * batch_idx / num_batches
+                progress = 100.0 * (batch_idx + 1) / num_batches
 
                 losses.append(loss.item())
                 progresses.append(progress)
@@ -120,18 +120,17 @@ class Trainer:
         print(f"Eval average loss: {avg_loss:.4f}, Accuracy: {accuracy:.4f}%")
         return avg_loss, accuracy
 
-    def val(self, loader, epoch, avg_loss_min):
+    def val(self, loader, epoch):
         """
-        saves the model if the new avg loss is less than the provided minimum,
-        returns the current minimum average loss
+        saves the model if the new avg loss is less than the provided minimum
         """
 
         avg_loss, accuracy = self.test(loader)
 
-        if avg_loss <= avg_loss_min:
+        if avg_loss <= self.avg_loss_min:
 
             print(
-                f"Validation loss decreased: {avg_loss_min} ----> {avg_loss} , Accuracy: {accuracy:.3f}% , Saving Model..."
+                f"Validation loss decreased: {self.avg_loss_min} ----> {avg_loss} , Accuracy: {accuracy:.3f}% , Saving Model..."
             )
 
             torch.save(
@@ -144,11 +143,9 @@ class Trainer:
                 self.checkpoint_path,
             )
 
-            return avg_loss
-
-        return avg_loss_min
+            self.avg_loss_min = avg_loss
 
     def train_loop(self, train_loader, val_loader, plot=False):
         for epoch in range(self.last_epoch, self.num_epochs + 1):
             self.train_epoch(train_loader, epoch, plot)
-            avg_loss_min = self.val(val_loader, epoch, avg_loss_min)
+            self.val(val_loader, epoch)
