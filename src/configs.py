@@ -3,9 +3,10 @@ import os
 
 
 class ConfigManager:
-    def __init__(self):
+    def __init__(self, lab_path):
         self.configs = {}
         self.active = {}
+        self.lab_path = lab_path
 
     def add(self, name, model, loss_fn, optim, batch_size, epochs):
         self.configs[name] = {
@@ -26,7 +27,7 @@ class ConfigManager:
     def __setitem__(self, key, value):
         self.configs[key] = value
 
-    def activate(self, name, lab_path):
+    def activate(self, name):
         self.active = self.configs[name]
 
         active = self.active
@@ -54,7 +55,7 @@ class ConfigManager:
         hash_object = hashlib.md5(checkpoint_str.encode())
         hash = hash_object.hexdigest()[:10]
 
-        model_path = os.path.join(lab_path, "model")
+        model_path = os.path.join(self.lab_path, "model")
 
         if not os.path.exists(model_path):
             os.makedirs(model_path)

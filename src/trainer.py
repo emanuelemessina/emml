@@ -64,7 +64,7 @@ class Trainer:
 
             batch_size = data.shape[0]
             if batch_idx % batch_size == 0:
-                sample_idx = batch_idx * len(data)
+                sample_idx = (batch_idx + 1) * batch_size
                 num_samples = len(train_loader.dataset)
                 num_batches = len(train_loader)
                 progress = 100.0 * (batch_idx + 1) / num_batches
@@ -84,7 +84,7 @@ class Trainer:
                     plt.show()
 
                 print(
-                    f"Train Epoch: {epoch} [s {sample_idx+1}/{num_samples} b {batch_idx+1}/{num_batches} ({progress:.0f}%)]\tLoss: {loss.item():.6f}"
+                    f"Train Epoch: {epoch} [s {sample_idx}/{num_samples} b {batch_idx+1}/{num_batches} ({progress:.0f}%)]\tLoss: {loss.item():.6f}"
                 )
 
     def test(self, loader):
